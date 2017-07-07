@@ -1,0 +1,14 @@
+To,
+Security Control Room
+ICICI Bank Ltd.
+
+Sub : Request for Issue of Entry Passes
+
+Please generate one Gate Pass for the following details.
+
+Name - Santanu Patel
+BANID-BAN114936
+EMP of - Aptus Data Labs
+
+Regards,
+Santanu Patel
