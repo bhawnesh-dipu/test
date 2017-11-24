@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7">
+<![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8">
+<![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9"><![endif]-->
+<!--[if gt IE 8]><html class="no-js"><![endif]-->
+<!--[if !(IE)]>
+<!-->
+<html class="no-ie no-js">
+<!--<![endif]-->
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Athena-ChatBot</title>
+<link rel="canonical" href="/company-summary.page">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<%@ page isELIgnored="false" %>
+<%@ page import="com.icici.athena.controller.*,java.io.BufferedReader,java.io.File,java.io.FileReader"%>
+  <%
+File f=new File("maintenance.flag");
+FileReader fr=new FileReader(f);
+BufferedReader br=new BufferedReader(fr);
+String mval=br.readLine();
+br.close();
+System.out.println("Mval:"+mval);
+
+%>
+   </head>
+
+    <script type="text/javascript" src="assets/js/lib/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/js/lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="assets/js/lib/jquery-ui.js"></script>
+    <script type="text/javascript" src="assets/js/custom.js"></script>
+    <!--[if lt IE 7]><script src="/assets/js/lib/dd.belated.min.js"></script><![endif]-->
+
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/chatScript.js"></script>
+    <script src="js/jquery.elevatezoom.js" type="text/javascript"></script>
+    <script src="js/toggle.js"></script>
+    <script src="js/show.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/log.js"></script>
+
+    <script src="js/insert.js"></script>
+   <script>
+
+////////////////////////////////////////////get selected app name from url////////////////////////////////////////////////////////////////////
+
+$.urlParam = function(name) {
+var results = new RegExp('[\?&]' + name + '=([^&#]*)')
+.exec(window.location.href);
+if (results == null) {
+return null;
+} else {
+return decodeURI(results[1]) || 0;
+}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+   function winOpen(){
+           var appName=$.urlParam('appName');
+           var mval=$('#mval').val();
+           alert(mval);
+           if(mval!=null && mval=="true"){
+        	   
+        	   if(appName===null || appName.toString().length==0){
+                   myWin = window.open("http://"+$('#myurl2').attr("value")+":"+$('#myport').attr("value")+"/Chat","Chatbot","dialog=yes,resizable=no,fullscreen=no,width=630, height=668,top=0,left=0");// Opens a new window
+               }else{
+                   myWin = window.open("http://"+$('#myurl2').attr("value")+":"+$('#myport').attr("value")+"/Chat?appName="+appName,"Chatbot","dialog=yes,resizable=no,fullscreen=no,width=630, height=668,top=0,left=0");// Opens a new window
+               }
+        	   
+           }else{
+           
+		           if(appName===null || appName.toString().length==0){
+						 myWin = window.open("http://"+$('#myurl').attr("value")+":"+$('#myport').attr("value")+"/Chat","Chatbot","dialog=yes,resizable=no,fullscreen=no,width=630, height=668,top=0,left=0");// Opens a new window
+		   
+		           }else{
+		               myWin = window.open("http://"+$('#myurl').attr("value")+":"+$('#myport').attr("value")+"/Chat?appName="+appName,"Chatbot","dialog=yes,resizable=no,fullscreen=no,width=630, height=668,top=0,left=0");// Opens a new window
+		           		
+		           }
+           }
+           
+}
+  </script>
+
+   <body onLoad="javascript: winOpen();">
+	
+	<a hidden="hidden" id="myurl" value='<%=ConstantController.redirecturl %>' >Click</a>
+	<a hidden="hidden" id="myport" value='<%=ConstantController.port %>' >Click</a>
+	
+
+		
+	<input type="hidden" id="mval" value='<%=mval %>'/>
+	
+	<a hidden="hidden" id="myurl2" value='<%=ConstantController.nextServer %>' >Click</a>
+
+   </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+package com.icici.athena.controller;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+@Configuration
+@Component 
+@RestController
+public class MaintenanceController {
+
+	@RequestMapping(value = "/Maintenance", method = RequestMethod.POST)
+	public static void maintenance(HttpServletRequest request,HttpServletResponse response ) throws IOException {
+		File f=new File("maintenance.flag");
+		if(request.getParameter("maintenance")!=null && request.getParameter("maintenance").toString().toLowerCase().equals("true")) {
+			FileWriter fw=new FileWriter(f);
+			BufferedWriter bw=new BufferedWriter(fw);
+			bw.write("true");
+			bw.close();
+		}else {
+			FileWriter fw=new FileWriter(f);
+			BufferedWriter bw=new BufferedWriter(fw);
+			
+			bw.write("false");
+			bw.close();
+		}
+		response.sendRedirect("/MaintenancePage");
+	}
+	
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7">
+<![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8">
+<![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9"><![endif]-->
+<!--[if gt IE 8]><html class="no-js"><![endif]-->
+<!--[if !(IE)]>
+<!-->
+<html class="no-ie no-js">
+<!--<![endif]-->
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Athena: Maintenance</title>
+<link rel="canonical" href="/company-summary.page">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="page-locale-name" content="English - United States">
+<link rel="stylesheet" href="assets/css/lib/bootstrap.min.css"
+	type="text/css">
+<link rel="stylesheet" href="assets/css/lib/jquery-ui.css"
+	type="text/css">
+<link rel="stylesheet" href="assets/css/custom.css" type="text/css">
+<link rel="stylesheet" href="css/font-awesome.min.css" />
+
+<script src="assets/js/lib/modernizr-2.6.2.min.js" async=""></script>
+
+
+<link href="css/style.css" rel="stylesheet" />
+<link href="css/chatStyle.css" rel="stylesheet" />
+
+<%@ page isELIgnored="false" %>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page
+	import="java.net.URLDecoder,com.icici.athena.app.App,com.icici.athena.grant.Grant,com.icici.athena.ldap.LDAPUtil,com.icici.athena.role.Role,com.icici.athena.user.User,com.icici.athena.controller.UserController"%>
+<%@ page import="java.util.*,java.io.BufferedReader,java.io.BufferedWriter,java.io.File,java.io.FileInputStream,java.io.FileOutputStream,java.io.FileReader,java.io.FileWriter,java.io.IOException"%>
+</head>
+<body>
+
+<%@include file="userDetail.jsp"%>
+
+	<div class="text-center mt20">
+		<img src="assets/img/logo.jpg" alt="">
+	</div>
+	<nav class="navbar navbar-default mt20">
+		<div class="container-fluid" >
+			<ul class="nav navbar-nav">
+				<c:if test="${isSuper eq 1 }">
+					<li><a href="/user-management">User Management</a></li>
+				</c:if>
+				<c:if
+					test="${isAdmin==1 or isSuper==1 or isInsert==1 or isShow==1 or isModify==1 or isDelete==1}">
+					<li><a href="/admin" class="selected">Faq Management</a></li>
+				</c:if>
+				<c:if test="${isSuper==1 or isAdmin==1 }">
+					<li><a href="/subject-area">Subject Area</a></li>
+				</c:if>
+				<c:if test="${isSuper==1 or isAdmin==1 or isCanGrant==1}">
+					<li><a href="/grant-management">Grant Management</a></li>
+				</c:if>
+				<c:if test="${isSuper==1 or isAdmin==1 }">
+					<li><a href="/role-management">Role Management</a></li>
+				</c:if>
+			</ul>
+			
+			<c:if test="${userName!=null && userID!=null}">
+				<div class="pull-right">
+					<% if(userName!=null && userName.length()>0){
+						
+						out.print("<a><label id='userid' value='"+userID+"' style='color:whitesmoke;font-size:17px;'>"+userName.substring(0,userName.indexOf('/'))+"&nbsp;&nbsp;</label></a>");
+					}	
+					%>
+					
+					
+					<button class="btn btn-danger btn-sm" href="/LogoutServlet"
+						onclick="logout();">Logout</button>
+					<input type='hidden' value=<%=sessionID%> id='sessionid' />
+				</div>
+			</c:if>
+		</div>
+
+	</nav>
+
+	<div class="container">
+	<c:choose>
+	<c:when test="${isSuper==1 or isAdmin==1 or isShow==1 or isInsert==1 or isModify==1 or isDelete==1 }">
+		<div class="row text-center">
+			<h2>Faq Management</h2>
+		</div>
+	</c:when>
+	<c:otherwise>
+		<div class="row text-center">
+			<h2>You are not in our System.</h2>
+			<h3>Note: Please contact your reporting Manager</h3>
+		</div>
+		</c:otherwise>
+</c:choose>
+<%
+File f=new File("maintenance.flag");
+System.out.println("fexist:"+f.exists());
+
+if(f.exists()==false){
+	f.createNewFile();
+	System.out.println("fexist--->:"+f.exists());
+	
+}
+FileReader fr=new FileReader(f);
+BufferedReader br=new BufferedReader(fr);
+String mval=br.readLine();
+br.close();
+System.out.println("Mval:"+mval);
+%>
+
+
+		<div class="row text-center mt20">
+<form action="/Maintenance" method="post">
+  <input type="radio" name="maintenance" value="true"  <%if(mval!=null && mval.equals("true")){ out.print(" checked='checked'");}%>/> Yes
+  <input type="radio" name="maintenance" value="false" <%if(mval!=null && mval.equals("false")){ out.print(" checked='checked'");}%>/> No
+  <input type="submit" value="submit"/>
+</form>
+
+	</div>
+
+
+	<footer class="footer">
+		<div class="container">
+			<p class="text-muted text-center">ICICI Bank Â© 2017</p>
+		</div>
+	</footer>
+
+ 
+
+
+
+	<script type="text/javascript" src="assets/js/lib/jquery.min.js"></script>
+	<script type="text/javascript" src="assets/js/lib/bootstrap.min.js"></script>
+	<script type="text/javascript" src="assets/js/lib/jquery-ui.js"></script>
+	<script type="text/javascript" src="assets/js/custom.js"></script>
+
+	<script src="js/jquery-3.2.1.min.js"></script>
+<!-- 	<script src="js/chatScript.js"></script>
+ -->
+ 	<script src="js/jquery.elevatezoom.js" type="text/javascript"></script>
+	<script src="js/toggle.js"></script>
+	<script src="js/show.js"></script>
+	<script src="js/login.js"></script>
+	<script src="js/log.js"></script>
+
+	<!--[if lt IE 7]><script src="/assets/js/lib/dd.belated.min.js"></script><![endif]-->
+</body>
+</html>
+
